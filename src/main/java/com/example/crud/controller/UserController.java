@@ -2,58 +2,38 @@ package com.example.crud.controller;
 
 import com.example.crud.service.*;
 import com.example.crud.entity.*;
-import org.springframework.beans.factory.annotation.Autowired;  
-import org.springframework.stereotype.Controller;  
-import org.springframework.ui.Model;  
-import org.springframework.web.bind.annotation.RequestMapping;  
-import org.springframework.web.bind.annotation.RequestMethod;  
-import org.springframework.web.bind.annotation.*;  
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;  
-import java.util.Optional;  
+import java.util.List;
 
-@Controller  
-public class UserController {  
-  @Autowired private UserService userService;  
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+@Autowired private UserService userService;
 
-  @RequestMapping("/")  
-  public String index(Model model) {  
-    List<User> users = userService.getAllUser();  
+@GetMapping("/")
+public List<User> getAllUsers() {
+return userService.getAllUser();
+}
 
-    model.addAttribute("users", users);  
+@PostMapping("/")
+public User addUser(@RequestBody User user) {
+return userService.saveUser(user);
+}
 
-    return "index";  
-  }  
+@GetMapping("/{id}")
+public User getUserById(@PathVariable Long id) {
+return userService.findUserById(id).orElse(null);
+}
 
-  @RequestMapping(value = "add")  
-  public String addUser(Model model) {  
-    model.addAttribute("user", new User());  
-    return "addUser";  
-  }  
+@PutMapping("/{id}")
+public User updateUser(@PathVariable Long id, @RequestBody User user) {
+return userService.updateUser(id, user);
+}
 
-  @RequestMapping(value = "/edit", method = RequestMethod.GET)  
-  public String editUser(@RequestParam("id") Long userId, Model model) {  
-    Optional<User> userEdit = userService.findUserById(userId);  
-    userEdit.ifPresent(user -> model.addAttribute("user", user));  
-    return "editUser";  
-  }  
-
-  @RequestMapping(value = "/detail", method = RequestMethod.GET)
-  public String detailUser(@RequestParam("id") long userId, Model model){
-    Optional<User> userDetail = userService.findUserById(userId);
-    userDetail.ifPresent(user -> model.addAttribute("user", user));
-    return "detailUser";
-  }
-
-  @RequestMapping(value = "save", method = RequestMethod.POST)  
-  public String save(User user) {  
-    userService.saveUser(user);  
-    return "redirect:/";  
-  }  
-
-  @RequestMapping(value = "/delete", method = RequestMethod.GET)  
-  public String deleteUser(@RequestParam("id") Long userId, Model model) {  
-    userService.deleteUser(userId);  
-    return "redirect:/";  
-  }  
+@DeleteMapping("/{id}")
+public void deleteUser(@PathVariable Long id) {
+userService.deleteUser(id);
+}
 }

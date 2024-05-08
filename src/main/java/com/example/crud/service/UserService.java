@@ -1,16 +1,19 @@
+
 package com.example.crud.service;
 
-import com.example.crud.entity.*;
+import com.example.crud.entity.User;
 
-import java.util.List;  
-import java.util.Optional;  
+import java.util.List;
+import java.util.Optional;
 
-public interface UserService {  
-  List<User> getAllUser();  
+public interface UserService {
+List<User> getAllUser();
 
-  void saveUser(User user);  
+User saveUser(User user);
 
-  void deleteUser(Long id);  
+User updateUser(Long id, User user);
 
-  Optional<User> findUserById(Long id);  
+void deleteUser(Long id);
+
+Optional<User> findUserById(Long id);
 }
